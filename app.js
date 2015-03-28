@@ -4,22 +4,15 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var _ = require('underscore');
+var mongojs = require('mongojs');
 
-var mongo = require('mongoskin');
-
-var routes = require('./routes/index');
-var users = require('./routes/users');
+var index = require('./routes/main/index');
+var users = require('./routes/admin/users');
+var pages = require('./routes/admin/pages');
+var deals = require('./routes/admin/deals');
 
 var app = express();
-
-var dbUrl = null;
-if (app.get("env") === "production") {
-  dbUrl = process.env.MONGOLAB_URI;
-} else {
-  dbUrl = "mongodb://localhost:27017/refurbland_dev";
-}
-
-var db = mongo.db(dbUrl, {native_parser:true});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -34,15 +27,39 @@ app.use(cookieParser());
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-// Make our db accessible to our router
 app.use(function(req,res,next){
-  req.db = db;
+  // Setup database url to connect to based on enviornment
+  var connectionString = null;
+  if (app.get("env") === "production") {
+    connectionString = process.env.MONGOLAB_URI;
+  } else {
+    connectionString = "mongodb://localhost/refurbland_dev";
+  }
+  var db = mongojs(connectionString, ["sites", "pages", "deals", "users"]);
+
+  req.db = db
+
+  // Make base layout rendering available to router
+  res.renderPage = function (template, options) {
+    options.style = options.style || ("main/" + template);
+    res.render("main/base", _.extend(options, {
+      "template": template
+    }));
+  };
+  res.renderAdminPage = function (template, options) {
+    options.style = options.style || ("admin/" + template);
+    res.render("admin/base", _.extend(options, {
+      "template": template
+    }));
+  };
+
   next();
 });
 
-app.use('/', routes);
-app.use('/users', users);
+app.use('/', index);
+app.use('/admin/users', users);
+app.use('/admin/pages', pages);
+app.use('/admin/deals', deals);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/main/base.css" />
+    <link rel="stylesheet" href="/stylesheets/main/<%= (style || template) %>.css" />
+  </head>
+  <body>
+  	<section class="page-header">
+	    <h1><%= title %></h1>
+    	<p>Welcome to <%= title %></p>
+    </section>
+
+    <section class="page-body">
+      <%- include(template, locals) %>
+    </section>
+
+	  <section class="page-footer">
+    </section>    
+  </body>
+</html>

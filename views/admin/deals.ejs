@@ -1,0 +1,6 @@
+<% deals.forEach(function(deal){ %>
+<a href="<%= deal.url %>" data-deal-id="<%= deal._id.valueOf() %>">
+  <img src="<%= deal.imageUrl %>"/>
+  <span><%= deal.name %></span>
+</a>
+<% }) %>

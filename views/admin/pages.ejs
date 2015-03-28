@@ -1,0 +1,21 @@
+<table>
+  <tr>
+  	<th>Name</th>
+  	<th>Type</th>
+  	<th>Url</th>
+  	<th>Actions</th>
+  </tr>
+  
+  <% pages.forEach(function(page){ %>
+  <tr data-object-id="<%= page._id.valueOf() %>">
+  	<td><%= page.name %></td>
+  	<td><%= page.type %></td>
+  	<td><%= page.url %></td>
+  	<td>
+      <a href="/admin/pages/<%= page._id.valueOf() %>/deals">deals</a>
+  	  <a href="/admin/pages/<%= page._id.valueOf() %>/crawl">crawl</a>
+  	  <a href="/admin/pages/<%= page._id.valueOf() %>/view">view</a>
+  	</td>
+  </tr>
+  <% }) %>
+</table>

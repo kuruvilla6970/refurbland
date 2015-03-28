@@ -31,3 +31,6 @@ npm-debug.log
 
 # MongoDB database files
 data
+
+# DS store files
+.DS_Store

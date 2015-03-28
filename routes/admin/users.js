@@ -5,9 +5,11 @@ var router = express.Router();
 router.get('/', function(req, res) {
     var db = req.db;
     db.collection('users').find().toArray(function (err, users) {
-     	res.render('users', {
+     	res.renderPage('users', {
      		"title": "Users",
-        	"users" : users
+        	locals: {
+        		"users" : users
+      		}
       	});
  	});
 });
