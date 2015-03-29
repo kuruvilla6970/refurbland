@@ -4,8 +4,9 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var monk = require('monk');
 var _ = require('underscore');
-var mongojs = require('mongojs');
+
 
 var index = require('./routes/main/index');
 var users = require('./routes/admin/users');
@@ -33,11 +34,9 @@ app.use(function(req,res,next){
   if (app.get("env") === "production") {
     connectionString = process.env.MONGOLAB_URI;
   } else {
-    connectionString = "mongodb://localhost/refurbland_dev";
+    connectionString = "localhost:27017/refurbland_dev";
   }
-  var db = mongojs(connectionString, ["sites", "pages", "deals", "users"]);
-
-  req.db = db
+  req.db = monk(connectionString);
 
   // Make base layout rendering available to router
   res.renderPage = function (template, options) {

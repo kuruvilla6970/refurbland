@@ -1,14 +1,13 @@
 var express = require('express');
 var cheerio = require('cheerio');
 var request = require('request');
-var mongojs = require('mongojs');
 var _ = require('underscore');
 
 var router = express.Router();
 
 var strUtils = {
 	currencyStringToNumber: function (currencyString) {
-		return currencyString.match(/.*\$.*?([0-9,]+\.[0-9]{2}?.*)/)[1]
+		return (currencyString.match(/.*\$.*?([0-9,]+\.[0-9]{2}?.*)/) || [])[1]
 	}
 };
 
@@ -51,9 +50,9 @@ router.get('/:id/view', function(req, res) {
 
 router.get('/:id/crawl', function(req, res) {
 	var db = req.db,
-		pageId = mongojs.ObjectId(req.params.id);
-		
-	db.pages.findOne({_id: pageId}, function (err, page) {
+		pageIdObj = db.get("pages").id(req.params.id);
+	
+	db.get("pages").findById(req.params.id, function (err, page) {
 		if (err)
 	    throw err;
 	    
@@ -64,7 +63,7 @@ router.get('/:id/crawl', function(req, res) {
 	    $ = cheerio.load(pageBody);
 	  	
 	  	_.each($(page.rules.entry).toArray(), function (entry) {
-	  		db.deals.insert({
+	  		db.get("deals").insert({
 	  			_pageId: page._id,
 	  			name: $(entry).find(page.rules.name).text(),
 	  			url: $(entry).find(page.rules.url).attr("href"),
@@ -82,13 +81,13 @@ router.get('/:id/crawl', function(req, res) {
 	  });
 	});
 
-
-
-  res.renderAdminPage("deals", {
-		title: "deals",
-		locals: {
-			"deals": db.deals.find({_pageId: pageId})
-		}
+	db.get("deals").find({_pageId: pageIdObj}).on("success", function (deals) {
+		res.renderAdminPage("deals", {
+			title: "deals",
+			locals: {
+				"deals": deals
+			}
+		});
 	});
 });
 
