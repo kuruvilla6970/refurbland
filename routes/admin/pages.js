@@ -64,15 +64,20 @@ router.get('/:id', function(req, res) {
 router.post('/:id', function(req, res) {
 	var db = req.db;
 
-	db.collection("pages").findById(ObjectID(req.params.id), function (err, page){
+	db.collection("pages").updateById(ObjectID(req.params.id), req.body.page, function (err, page){
 		if (err)
 			throw err;
 
-		res.renderAdminPage("page", {
-			title: "Page",
-			locals: {
-				"page": page
-			}
+		db.collection("pages").findById(ObjectID(req.params.id), function (err, page) {
+			if (err)
+				throw err;
+
+			res.renderAdminPage("page", {
+				title: "Page",
+				locals: {
+					"page": page
+				}
+			});
 		});
 	});
 });
