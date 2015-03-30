@@ -14,7 +14,10 @@ var strUtils = {
 router.get('/', function(req, res) {
   var db = req.db;
 
-  db.pages.find().toArray(function (err, pages) {
+  db.get("pages").find({}, {}, function (err, pages) {
+		if (err)
+			throw err;
+
    	res.renderAdminPage('pages', {
    		"title": "Pages",
    		locals: {
@@ -26,13 +29,18 @@ router.get('/', function(req, res) {
 
 router.get('/:id/deals', function(req, res) {
 	var db = req.db,
-		deals = null;
+		pageId = db.get("pages").id(req.params.id);
 
-	res.renderAdminPage("deals", {
-		title: "Deals",
-		locals: {
-			"deals": deals
-		}
+	db.get("deals").find({_pageId: pageId}, {}, function (err, deals) {
+		if (err)
+			throw err;
+
+		res.renderAdminPage("deals", {
+			title: "deals",
+			locals: {
+				"deals": deals
+			}
+		});
 	});
 });
 
@@ -78,16 +86,16 @@ router.get('/:id/crawl', function(req, res) {
 	  			}
 	  		});
 	  	});
-	  });
-	});
 
-	db.get("deals").find({_pageId: pageIdObj}).on("success", function (deals) {
-		res.renderAdminPage("deals", {
-			title: "deals",
-			locals: {
-				"deals": deals
-			}
-		});
+	  	db.get("deals").find({_pageId: pageIdObj}).on("success", function (deals) {
+				res.renderAdminPage("deals", {
+					title: "deals",
+					locals: {
+						"deals": deals
+					}
+				});
+			});
+	  });
 	});
 });
 
