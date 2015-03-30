@@ -1,0 +1,53 @@
+<form method="POST" action="/admin/pages/<%= page._id %>">
+	<div>
+		<label>_id</label><br>
+		<input type="text" value="<%= page._id %>"/>
+	</div>
+	<div>
+		<label>name</label><br>
+		<input type="text" value="<%= page.name %>"/>
+	</div>
+	<div>
+		<label>type</label><br>
+		<input type="text" value="<%= page.type %>"/>
+	</div>
+	<div>
+		<label>url</label><br>
+		<input type="text" value="<%= page.url %>"/>
+	</div>
+	<div>
+		<label>rules.entry</label><br>
+		<input type="text" value="<%= page.rules.entry %>"/>
+	</div>
+	<div>
+		<label>rules.name</label><br>
+		<input type="text" value="<%= page.rules.name %>"/>
+	</div>
+	<div>
+		<label>rules.url</label><br>
+		<input type="text" value="<%= page.rules.url %>"/>
+	</div>
+	<div>
+		<label>rules.imageUrl</label><br>
+		<input type="text" value="<%= page.rules.imageUrl %>"/>
+	</div>
+	<div>
+		<label>rules.price.regular</label><br>
+		<input type="text" value="<%= page.rules.price.regular %>"/>
+	</div>
+	<div>
+		<label>rules.price.deal</label><br>
+		<input type="text" value="<%= page.rules.price.deal %>"/>
+	</div>
+	<div>
+		<label>rules.savings.percentage</label><br>
+		<input type="text" value="<%= page.rules.savings.percentage %>"/>
+	</div>
+	<div>
+		<label>rules.price.value</label><br>
+		<input type="text" value="<%= page.rules.savings.value %>"/>
+	</div>
+	<div>
+		<input type="submit" value="Submit"/>
+	</div>
+</form>

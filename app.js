@@ -4,7 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var monk = require('monk');
+var mongoskin = require('mongoskin');
 var _ = require('underscore');
 
 
@@ -34,9 +34,9 @@ app.use(function(req,res,next){
   if (app.get("env") === "production") {
     connectionString = process.env.MONGOLAB_URI;
   } else {
-    connectionString = "localhost:27017/refurbland_dev";
+    connectionString = "mongodb://localhost:27017/refurbland_dev";
   }
-  req.db = monk(connectionString);
+  req.db = mongoskin.db(connectionString);
 
   // Make base layout rendering available to router
   res.renderPage = function (template, options) {
