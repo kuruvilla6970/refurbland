@@ -12,6 +12,10 @@ var strUtils = {
 	}
 };
 
+var crawlPage = function (db, pageUrl) {
+
+};
+
 router.get('/', function(req, res) {
   var db = req.db;
 
@@ -26,6 +30,17 @@ router.get('/', function(req, res) {
       }
     });
   });
+});
+
+router.get('/new', function(req, res) {
+  var db = req.db;
+
+  res.renderAdminPage("page", {
+		title: "Page",
+		locals: {
+			"page": {"rules": {"price": {}, "savings": {}}}
+		}
+	});
 });
 
 router.get('/:id/deals', function(req, res) {
@@ -58,6 +73,17 @@ router.get('/:id', function(req, res) {
 				"page": page
 			}
 		});
+	});
+});
+
+router.post('/', function (req, res) {
+	var db = req.db;
+
+	db.collection("pages").insert(req.body.page, function (err, page) {
+		if (err)
+			throw err
+
+		res.redirect("/admin/pages/" + page[0]._id.toHexString());
 	});
 });
 
@@ -112,7 +138,7 @@ router.get('/:id/crawl', function(req, res) {
 	  			}
 	  		}, function (err, deal) {
 	  			if (err)
-	  				throw err;	
+	  				throw err;
 	  		});
 	  	});
 
